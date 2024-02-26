@@ -11,29 +11,34 @@ def calculate_demographic_data(print_data=True):
     
     
     race_count = pd.Series(
-        df[df["race"]==races[0]]["age"].count(),
+        [df[df["race"]==races[0]]["age"].count(),
         df[df["race"]==races[1]]["age"].count(),
         df[df["race"]==races[2]]["age"].count(),
         df[df["race"]==races[3]]["age"].count(),
-        df[df["race"]==races[4]]["age"].count(), 
+        df[df["race"]==races[4]]["age"].count()], 
         index=races)
 
     # What is the average age of men?
-    average_age_men = df[df["sex"]=="Male"]["age"].mean().round()
+    average_age_men = round(df[df["sex"]=="Male"]["age"].mean(),1)
 
     # What is the percentage of people who have a Bachelor's degree?
-    percentage_bachelors = None
+    percentage_bachelors = round((len(df[df["education"]=="Bachelors"])/len(df.index)*100),1)
 
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
     # What percentage of people without advanced education make more than 50K?
 
     # with and without `Bachelors`, `Masters`, or `Doctorate`
-    higher_education = None
-    lower_education = None
+
+    higher=df[(df["education"]=="Bachelors")|(df["education"]=="Masters")|(df["education"]=="Doctorate")]    
+    lower=df[(df["education"]!="Bachelors")&(df["education"]!="Masters")&(df["education"]!="Doctorate")]
+
+
+    higher_education = higher.index.size
+    lower_education = lower.index.size
 
     # percentage with salary >50K
-    higher_education_rich = None
-    lower_education_rich = None
+    higher_education_rich = round((higher[higher["salary"]==">50K"].index.size)/higher.index.size*100,1)
+    lower_education_rich = round((lower[lower["salary"]==">50K"].index.size)/lower.index.size*100,1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
     min_work_hours = None
